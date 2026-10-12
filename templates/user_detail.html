@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user["name"] }} - User Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .user-detail-card {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .user-face {
+            width: 100%;
+            max-width: 220px;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #f3f4f6;
+        }
+
+        .user-face-placeholder {
+            width: 100%;
+            max-width: 220px;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .user-detail-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .user-detail-item span {
+            display: block;
+            margin-bottom: 4px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .user-detail-item strong {
+            overflow-wrap: anywhere;
+        }
+
+        .back-area {
+            margin-top: 22px;
+        }
+
+        @media (max-width: 640px) {
+            .user-detail-card {
+                grid-template-columns: 1fr;
+            }
+
+            .user-face,
+            .user-face-placeholder {
+                max-width: 180px;
+            }
+
+            .user-detail-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <header class="header">
+        <h1>User Details</h1>
+        <p>Registered profile for {{ user["name"] }}.</p>
+    </header>
+
+    <section class="card user-detail-card">
+        {% if user["face_image"] %}
+            <img
+                src="{{ url_for('user_face', user_id=user['id']) }}"
+                alt="Face photo of {{ user['name'] }}"
+                class="user-face"
+            >
+        {% else %}
+            <div class="user-face-placeholder">No face photo</div>
+        {% endif %}
+
+        <div class="user-detail-list">
+            <div class="user-detail-item">
+                <span>Name</span>
+                <strong>{{ user["name"] }}</strong>
+            </div>
+            <div class="user-detail-item">
+                <span>Employee ID</span>
+                <strong>{{ user["employee_id"] }}</strong>
+            </div>
+            <div class="user-detail-item">
+                <span>Email</span>
+                <strong>{{ user["email"] or "-" }}</strong>
+            </div>
+            <div class="user-detail-item">
+                <span>Phone</span>
+                <strong>{{ user["phone"] or "-" }}</strong>
+            </div>
+            <div class="user-detail-item">
+                <span>Department</span>
+                <strong>{{ user["department"] or "-" }}</strong>
+            </div>
+            <div class="user-detail-item">
+                <span>Registered On</span>
+                <strong>{{ user["created_at"] }}</strong>
+            </div>
+        </div>
+    </section>
+
+    <div class="back-area">
+        <a href="{{ url_for('users') }}" class="back-btn">← Back to Users</a>
+    </div>
+</div>
+</body>
+
+</html>

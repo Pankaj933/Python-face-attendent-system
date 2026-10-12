@@ -2,127 +2,188 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Mark Attendance - Automated Attendance</title>
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Mark Attendance — Attendance OS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-
-<body>
-
-<div class="container">
-
-    <!-- HEADER -->
-
-    <header class="header">
-
-        <h1>Mark Attendance</h1>
-
-        <p>
-            Look at the camera to mark your attendance.
-        </p>
-
-    </header>
-
-
-    <div class="attendance-grid">
-
-
-        <!-- CAMERA -->
-
-        <section class="card attendance-camera-card">
-
-            <h2>Attendance Camera</h2>
-
-            <div class="camera-box attendance-camera-box">
-
-                <video
-                    id="video"
-                    autoplay
-                    playsinline
-                ></video>
-
-                <div id="cameraMessage">
-                    Camera starting...
-                </div>
-
-            </div>
-
-
-            <button
-                type="button"
-                class="btn"
-                onclick="startAttendanceCamera()"
-            >
-                📷 Retry Camera
-            </button>
-
-
-            <canvas
-                id="canvas"
-                style="display:none;"
-            ></canvas>
-
-
-            <div
-                id="attendanceMessage"
-                class="attendance-message"
-            ></div>
-
-        </section>
-
-
-        <!-- RESULT -->
-
-        <section class="card attendance-result-card">
-
-            <h2>Attendance Result</h2>
-
-
-            <div
-                id="resultBox"
-                class="result-box"
-            >
-
-                <div class="result-icon">
-                    👤
-                </div>
-
-                <h3 id="resultName">
-                    Waiting for face...
-                </h3>
-
-                <p id="resultDetails">
-                    Camera khulte hi face automatically scan hoga.
-                </p>
-
-            </div>
-
-        </section>
-
-    </div>
-
-
-    <div class="back-area">
-
-        <a href="/" class="back-btn">
-            ← Back to Dashboard
+<body class="attendance-page">
+<div class="attendance-app-shell">
+    <aside class="attendance-sidebar">
+        <a class="attendance-brand" href="/">
+            <span class="attendance-brand-mark" aria-hidden="true">A</span>
+            <span>Attendance OS</span>
         </a>
 
+        <p class="attendance-nav-caption">Workspace</p>
+        <nav class="attendance-nav" aria-label="Main navigation">
+            <a href="/" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="4.5" rx="1.5"/><rect x="13.5" y="11" width="7" height="9.5" rx="1.5"/><rect x="3.5" y="13" width="7" height="7.5" rx="1.5"/>
+                </svg>
+                Dashboard
+            </a>
+            <a href="/attendance" class="attendance-nav-link active" aria-current="page">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/>
+                    <circle cx="12" cy="10" r="2.5"/><path d="M7.8 17c.7-2.1 2.1-3.1 4.2-3.1s3.5 1 4.2 3.1"/>
+                </svg>
+                Mark attendance
+            </a>
+            <a href="/users" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0M16 5.5a3 3 0 0 1 0 5.8M17 14a4.5 4.5 0 0 1 3.2 4.3"/>
+                </svg>
+                People
+            </a>
+            <a href="/attendance-records" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h4"/>
+                </svg>
+                Attendance records
+            </a>
+            <a href="/register" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0M18 8v6M15 11h6"/>
+                </svg>
+                Register a person
+            </a>
+        </nav>
+
+        <div class="attendance-sidebar-bottom">
+            <div class="attendance-sidebar-note">
+                <div><span></span> System operational</div>
+                <p>Face recognition is ready for check-ins.</p>
+            </div>
+        </div>
+    </aside>
+
+    <div class="attendance-workspace">
+        <header class="attendance-topbar">
+            <div class="attendance-topbar-inner">
+                <div class="attendance-breadcrumb">
+                    Workspace <span aria-hidden="true">/</span> <strong>Mark attendance</strong>
+                </div>
+                <div class="attendance-secure-label">
+                    <span aria-hidden="true"></span>
+                    Face recognition enabled
+                </div>
+            </div>
+        </header>
+
+<main class="attendance-container">
+    <section class="attendance-page-heading">
+        <div>
+            <p class="attendance-eyebrow">Daily check-in</p>
+            <h1>Mark attendance</h1>
+            <p class="attendance-intro">
+                Look at the camera. We’ll recognize the registered face and record today’s attendance automatically.
+            </p>
+        </div>
+    </section>
+
+    <div class="attendance-grid">
+        <section class="card attendance-camera-card" aria-labelledby="cameraHeading">
+            <div class="attendance-panel-heading">
+                <div>
+                    <h2 id="cameraHeading">Live camera</h2>
+                    <p>Position your face inside the frame</p>
+                </div>
+                <span class="attendance-scan-label">
+                    <span aria-hidden="true"></span>
+                    Auto scan
+                </span>
+            </div>
+
+            <div class="camera-box attendance-camera-box">
+                <video id="video" autoplay playsinline aria-label="Live attendance camera"></video>
+                <div class="camera-frame" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span>
+                </div>
+                <div id="cameraMessage" class="attendance-camera-status" role="status">
+                    Camera starting...
+                </div>
+                <div class="attendance-camera-hint" aria-hidden="true">
+                    Center your face in the frame
+                </div>
+            </div>
+
+            <canvas id="canvas" style="display:none;"></canvas>
+
+            <div class="attendance-camera-footer">
+                <div class="attendance-camera-tip">
+                    <span class="tip-icon" aria-hidden="true">i</span>
+                    Keep your face visible and look toward the camera.
+                </div>
+                <button
+                    type="button"
+                    class="btn attendance-retry-btn"
+                    onclick="startAttendanceCamera()"
+                >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.5 9a7 7 0 0 1 11.8-2L20 12M4 12l2.7 5a7 7 0 0 0 11.8-2"/>
+                    </svg>
+                    Retry camera
+                </button>
+            </div>
+
+            <div id="attendanceMessage" class="attendance-message" role="status" aria-live="polite"></div>
+        </section>
+
+        <aside class="attendance-side-column">
+            <section class="card attendance-result-card" aria-labelledby="resultHeading">
+                <div class="attendance-panel-heading result-panel-heading">
+                    <div>
+                        <h2 id="resultHeading">Recognition result</h2>
+                        <p>Your check-in will appear here</p>
+                    </div>
+                    <span class="result-live-indicator" aria-label="Waiting for recognition">
+                        <span></span>
+                    </span>
+                </div>
+
+                <div id="resultBox" class="result-box" aria-live="polite">
+                    <div class="result-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="3.2"/>
+                            <path d="M5.5 20a6.5 6.5 0 0 1 13 0"/>
+                        </svg>
+                    </div>
+                    <span class="result-kicker">Ready to recognize</span>
+                    <h3 id="resultName">Waiting for face...</h3>
+                    <p id="resultDetails">When a registered face is recognized, attendance will be marked automatically.</p>
+                </div>
+            </section>
+
+            <section class="card attendance-guide-card" aria-labelledby="guideHeading">
+                <div class="attendance-guide-heading">
+                    <span class="guide-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+                        </svg>
+                    </span>
+                    <div>
+                        <h2 id="guideHeading">A smooth check-in</h2>
+                        <p>For the best recognition</p>
+                    </div>
+                </div>
+                <ul class="attendance-tips">
+                    <li><span>01</span><p>Face the camera directly</p></li>
+                    <li><span>02</span><p>Use a well-lit space</p></li>
+                    <li><span>03</span><p>Keep only one face in view</p></li>
+                </ul>
+            </section>
+        </aside>
     </div>
 
+    <footer class="attendance-footer">
+        <span>Attendance OS <span aria-hidden="true">·</span> Secure face recognition</span>
+        <a href="/">Return to dashboard <span aria-hidden="true">→</span></a>
+    </footer>
+</main>
+    </div>
 </div>
 
 <div
@@ -136,23 +197,20 @@
 >
     <div class="attendance-modal-card">
         <div class="attendance-modal-icon" aria-hidden="true">✓</div>
-        <h2 id="attendanceSuccessTitle">Attendance Successfully Marked</h2>
+        <p class="attendance-modal-eyebrow">Check-in complete</p>
+        <h2 id="attendanceSuccessTitle">Attendance successfully marked</h2>
         <p id="attendanceSuccessDetails"></p>
         <button
             type="button"
             class="btn attendance-modal-ok"
             onclick="goToDashboard()"
         >
-            OK
+            Continue to dashboard
         </button>
     </div>
 </div>
 
-
-<script
-    src="{{ url_for('static', filename='js/attendance.js') }}"
-></script>
-
+<script src="{{ url_for('static', filename='js/attendance.js') }}"></script>
 </body>
 
 </html>

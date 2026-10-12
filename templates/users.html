@@ -2,155 +2,179 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Users - Automated Attendance</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>People — Attendance OS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
 </head>
 
-
-<body>
-
-<div class="container">
-
-    <!-- HEADER -->
-
-    <header class="header users-header">
-
-        <div>
-
-            <h1>Registered Users</h1>
-
-            <p>
-                Manage all registered employees.
-            </p>
-
-        </div>
-
-        <a href="/register" class="top-btn">
-            + Register User
+<body class="attendance-page users-page">
+<div class="attendance-app-shell">
+    <aside class="attendance-sidebar">
+        <a class="attendance-brand" href="/">
+            <span class="attendance-brand-mark" aria-hidden="true">A</span>
+            <span>Attendance OS</span>
         </a>
 
-    </header>
+        <p class="attendance-nav-caption">Workspace</p>
+        <nav class="attendance-nav" aria-label="Main navigation">
+            <a href="/" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="4.5" rx="1.5"/><rect x="13.5" y="11" width="7" height="9.5" rx="1.5"/><rect x="3.5" y="13" width="7" height="7.5" rx="1.5"/>
+                </svg>
+                Dashboard
+            </a>
+            <a href="/attendance" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/>
+                    <circle cx="12" cy="10" r="2.5"/><path d="M7.8 17c.7-2.1 2.1-3.1 4.2-3.1s3.5 1 4.2 3.1"/>
+                </svg>
+                Mark attendance
+            </a>
+            <a href="/users" class="attendance-nav-link active" aria-current="page">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0M16 5.5a3 3 0 0 1 0 5.8M17 14a4.5 4.5 0 0 1 3.2 4.3"/>
+                </svg>
+                People
+            </a>
+            <a href="/attendance-records" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h4"/>
+                </svg>
+                Attendance records
+            </a>
+            <a href="/register" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0M18 8v6M15 11h6"/>
+                </svg>
+                Register a person
+            </a>
+        </nav>
 
-
-    <!-- USER TABLE -->
-
-    <section class="card users-card">
-
-        <div class="table-wrapper">
-
-            <table class="users-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>#</th>
-
-                        <th>Name</th>
-
-                        <th>Employee ID</th>
-
-                        <th>Email</th>
-
-                        <th>Phone</th>
-
-                        <th>Department</th>
-
-                        <th>Registered On</th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                    {% if users %}
-
-                        {% for user in users %}
-
-                        <tr>
-
-                            <td>
-                                {{ loop.index }}
-                            </td>
-
-                            <td>
-                                <strong>
-                                    {{ user["name"] }}
-                                </strong>
-                            </td>
-
-                            <td>
-                                {{ user["employee_id"] }}
-                            </td>
-
-                            <td>
-                                {{ user["email"] or "-" }}
-                            </td>
-
-                            <td>
-                                {{ user["phone"] or "-" }}
-                            </td>
-
-                            <td>
-                                {{ user["department"] or "-" }}
-                            </td>
-
-                            <td>
-                                {{ user["created_at"] }}
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    {% else %}
-
-                        <tr>
-
-                            <td
-                                colspan="7"
-                                class="empty-users"
-                            >
-                                No users registered yet.
-                            </td>
-
-                        </tr>
-
-                    {% endif %}
-
-                </tbody>
-
-            </table>
-
+        <div class="attendance-sidebar-bottom">
+            <div class="attendance-sidebar-note">
+                <div><span></span> System operational</div>
+                <p>Face recognition is ready for check-ins.</p>
+            </div>
         </div>
+    </aside>
 
-    </section>
+    <div class="attendance-workspace">
+        <header class="attendance-topbar">
+            <div class="attendance-topbar-inner">
+                <div class="attendance-breadcrumb">
+                    Workspace <span aria-hidden="true">/</span> <strong>People</strong>
+                </div>
+                <a href="/register" class="users-register-button">
+                    <span aria-hidden="true">+</span>
+                    Register person
+                </a>
+            </div>
+        </header>
 
+        <main class="users-main">
+            <section class="users-page-heading">
+                <div>
+                    <p class="users-eyebrow">Team directory</p>
+                    <h1>People</h1>
+                    <p>Manage registered profiles and their face-recognition details.</p>
+                </div>
+                <div class="users-total-chip">
+                    <span class="users-total-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0M16 5.5a3 3 0 0 1 0 5.8M17 14a4.5 4.5 0 0 1 3.2 4.3"/>
+                        </svg>
+                    </span>
+                    <span><strong>{{ users|length }}</strong> registered</span>
+                </div>
+            </section>
 
-    <!-- BACK -->
+            {% if request.args.get("warning") == "face_image_cleanup_failed" %}
+                <p class="flash-message">
+                    User was deleted, but the face image could not be removed.
+                </p>
+            {% endif %}
 
-    <div class="back-area">
+            <section class="users-directory-card" aria-labelledby="directoryHeading">
+                <div class="users-directory-heading">
+                    <div>
+                        <h2 id="directoryHeading">All people</h2>
+                        <p>Registered profiles in your attendance system</p>
+                    </div>
+                    <span class="users-directory-count">{{ users|length }} total</span>
+                </div>
 
-        <a href="/" class="back-btn">
-            ← Back to Dashboard
-        </a>
+                {% if users %}
+                    <div class="users-directory-scroll">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Person</th>
+                                    <th>Employee ID</th>
+                                    <th>Contact</th>
+                                    <th>Department</th>
+                                    <th>Registered</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td class="users-person-cell">
+                                        <span class="users-avatar" aria-hidden="true">{{ user["name"][:1]|upper }}</span>
+                                        <span class="users-person-copy">
+                                            <strong>{{ user["name"] }}</strong>
+                                            <small>{{ user["email"] or "No email added" }}</small>
+                                        </span>
+                                    </td>
+                                    <td><span class="users-id-pill">{{ user["employee_id"] }}</span></td>
+                                    <td>{{ user["phone"] or "—" }}</td>
+                                    <td>{{ user["department"] or "—" }}</td>
+                                    <td>{{ user["created_at"] }}</td>
+                                    <td class="user-actions">
+                                        <a
+                                            href="{{ url_for('user_detail', user_id=user['id']) }}"
+                                            class="user-action view-action"
+                                        >
+                                            View
+                                        </a>
+                                        <form
+                                            action="{{ url_for('delete_user', user_id=user['id']) }}"
+                                            method="post"
+                                            onsubmit="return confirm('Delete this user and their attendance records? This cannot be undone.');"
+                                        >
+                                            <button type="submit" class="user-action delete-action">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="users-empty-state">
+                        <span class="users-empty-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0M18 8v6M15 11h6"/>
+                            </svg>
+                        </span>
+                        <h3>No people registered yet</h3>
+                        <p>Add a person to start managing attendance and face profiles.</p>
+                        <a href="/register" class="users-empty-button">Register first person</a>
+                    </div>
+                {% endif %}
+            </section>
 
+            <footer class="users-page-footer">
+                <span>Attendance OS <span aria-hidden="true">·</span> Team directory</span>
+                <a href="/">Return to dashboard <span aria-hidden="true">→</span></a>
+            </footer>
+        </main>
     </div>
-
 </div>
-
 </body>
 
 </html>

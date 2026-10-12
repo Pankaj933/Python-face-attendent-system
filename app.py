@@ -1,8 +1,18 @@
-from flask import Flask, render_template, request, jsonify
+from flask import (
+    Flask,
+    abort,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+)
 import cv2
 import numpy as np
 import os
 import base64
+from datetime import datetime
 from database import init_db, create_user, get_db
 from face_engine import create_embedding, compare_faces
 
@@ -26,9 +36,25 @@ def dashboard():
 
     conn = get_db()
 
-    total_users = conn.execute(
-        "SELECT COUNT(*) FROM users"
-    ).fetchone()[0]
+    today = datetime.now().strftime("%Y-%m-%d")
+    stats = conn.execute("""
+        SELECT
+            COUNT(*) AS total_users,
+            (
+                SELECT COUNT(DISTINCT user_id)
+                FROM attendance
+                WHERE attendance_date = ?
+                AND status IN ('Present', 'Late')
+            ) AS present_today
+        FROM users
+    """, (today,)).fetchone()
+
+    total_users = stats["total_users"]
+    present_today = stats["present_today"]
+    absent_today = max(total_users - present_today, 0)
+    attendance_rate = round(
+        present_today / total_users * 100
+    ) if total_users else 0
 
     recent_attendance = conn.execute("""
         SELECT
@@ -51,6 +77,10 @@ def dashboard():
     return render_template(
         "dashboard.html",
         total_users=total_users,
+        present_today=present_today,
+        absent_today=absent_today,
+        attendance_rate=attendance_rate,
+        current_date=datetime.now().strftime("%A, %B %d, %Y"),
         recent_attendance=recent_attendance
     )
 
@@ -473,6 +503,112 @@ def users():
         "users.html",
         users=users
     )
+
+
+@app.route("/users/<int:user_id>")
+def user_detail(user_id):
+    conn = get_db()
+
+    user = conn.execute("""
+        SELECT
+            id,
+            name,
+            employee_id,
+            email,
+            phone,
+            department,
+            face_image,
+            created_at
+        FROM users
+        WHERE id = ?
+    """, (user_id,)).fetchone()
+
+    conn.close()
+
+    if user is None:
+        abort(404)
+
+    return render_template("user_detail.html", user=user)
+
+
+@app.route("/users/<int:user_id>/face")
+def user_face(user_id):
+    conn = get_db()
+    user = conn.execute(
+        "SELECT face_image FROM users WHERE id = ?",
+        (user_id,)
+    ).fetchone()
+    conn.close()
+
+    if user is None or not user["face_image"]:
+        abort(404)
+
+    face_filename = os.path.basename(user["face_image"])
+    if face_filename != user["face_image"]:
+        abort(404)
+
+    face_folder = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "face_data"
+    )
+    return send_from_directory(face_folder, face_filename)
+
+
+@app.route("/users/<int:user_id>/delete", methods=["POST"])
+def delete_user(user_id):
+    conn = get_db()
+    user = conn.execute(
+        "SELECT face_image FROM users WHERE id = ?",
+        (user_id,)
+    ).fetchone()
+
+    if user is None:
+        conn.close()
+        abort(404)
+
+    face_filename = user["face_image"]
+
+    try:
+        conn.execute(
+            "DELETE FROM attendance WHERE user_id = ?",
+            (user_id,)
+        )
+        conn.execute(
+            "DELETE FROM users WHERE id = ?",
+            (user_id,)
+        )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+    cleanup_warning = False
+    if face_filename:
+        safe_face_filename = os.path.basename(face_filename)
+        if safe_face_filename == face_filename:
+            face_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)),
+                "face_data",
+                safe_face_filename
+            )
+            try:
+                os.remove(face_path)
+            except FileNotFoundError:
+                pass
+            except OSError as error:
+                app.logger.error(
+                    "Could not remove face image for user %s: %s",
+                    user_id,
+                    error
+                )
+                cleanup_warning = True
+
+    if cleanup_warning:
+        return redirect(url_for("users", warning="face_image_cleanup_failed"))
+    return redirect(url_for("users"))
+
 
 # ==========================================
 # MARK ATTENDANCE PAGE

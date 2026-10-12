@@ -4,186 +4,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Register User - Automated Attendance</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Register a Person — Attendance OS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
-
-<div class="container">
-
-    <header class="header">
-
-        <h1>Register User</h1>
-
-        <p>
-            Add employee details and capture face for attendance.
-        </p>
-
-    </header>
-
-
-    <div class="register-grid">
-
-        <!-- USER DETAILS -->
-
-        <div class="card">
-
-            <h2>User Details</h2>
-
-            <form id="registerForm">
-
-                <div class="form-group">
-
-                    <label>Full Name</label>
-
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        placeholder="Enter full name"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Employee ID</label>
-
-                    <input
-                        type="text"
-                        id="employee_id"
-                        name="employee_id"
-                        placeholder="Enter employee ID"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Email</label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Enter email"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Phone</label>
-
-                    <input
-                        type="text"
-                        id="phone"
-                        name="phone"
-                        placeholder="Enter phone number"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Department</label>
-
-                    <input
-                        type="text"
-                        id="department"
-                        name="department"
-                        placeholder="Enter department"
-                    >
-
-                </div>
-
-
-                <button
-                    type="button"
-                    class="btn"
-                    onclick="startCamera()"
-                >
-                    📷 Open Camera
-                </button>
-
-            </form>
-
-        </div>
-
-
-        <!-- CAMERA -->
-
-        <div class="card camera-card">
-
-            <h2>Face Capture</h2>
-
-            <div class="camera-box">
-
-                <video
-                    id="video"
-                    autoplay
-                    playsinline
-                ></video>
-
-                <div id="cameraMessage">
-                    Camera not started
-                </div>
-
-            </div>
-
-
-            <button
-                type="button"
-                class="btn capture-btn"
-                onclick="captureFace()"
-            >
-                📸 Capture Face
-            </button>
-            <button
-    type="button"
-    class="btn register-btn"
-    onclick="registerUser()"
->
-    ✅ Register User
-</button>
-
-
-            <canvas
-                id="canvas"
-                style="display:none;"
-            ></canvas>
-
-
-            <div id="captureMessage"></div>
-
-        </div>
-
-    </div>
-
-
-    <div class="back-area">
-
-        <a href="/" class="back-btn">
-            ← Back to Dashboard
+<body class="attendance-page register-page">
+<div class="attendance-app-shell">
+    <aside class="attendance-sidebar">
+        <a class="attendance-brand" href="/">
+            <span class="attendance-brand-mark" aria-hidden="true">A</span>
+            <span>Attendance OS</span>
         </a>
 
-    </div>
+        <p class="attendance-nav-caption">Workspace</p>
+        <nav class="attendance-nav" aria-label="Main navigation">
+            <a href="/" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="4.5" rx="1.5"/><rect x="13.5" y="11" width="7" height="9.5" rx="1.5"/><rect x="3.5" y="13" width="7" height="7.5" rx="1.5"/>
+                </svg>
+                Dashboard
+            </a>
+            <a href="/attendance" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/>
+                    <circle cx="12" cy="10" r="2.5"/><path d="M7.8 17c.7-2.1 2.1-3.1 4.2-3.1s3.5 1 4.2 3.1"/>
+                </svg>
+                Mark attendance
+            </a>
+            <a href="/users" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0M16 5.5a3 3 0 0 1 0 5.8M17 14a4.5 4.5 0 0 1 3.2 4.3"/>
+                </svg>
+                People
+            </a>
+            <a href="/attendance-records" class="attendance-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h4"/>
+                </svg>
+                Attendance records
+            </a>
+            <a href="/register" class="attendance-nav-link active" aria-current="page">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="9" cy="8" r="3"/><path d="M3.8 19a5.2 5.2 0 0 1 10.4 0M18 8v6M15 11h6"/>
+                </svg>
+                Register a person
+            </a>
+        </nav>
 
+        <div class="attendance-sidebar-bottom">
+            <div class="attendance-sidebar-note">
+                <div><span></span> System operational</div>
+                <p>Face recognition is ready for enrollment.</p>
+            </div>
+        </div>
+    </aside>
+
+    <div class="attendance-workspace">
+        <header class="attendance-topbar">
+            <div class="attendance-topbar-inner">
+                <div class="attendance-breadcrumb">
+                    Workspace <span aria-hidden="true">/</span> <strong>Register a person</strong>
+                </div>
+                <a class="register-top-link" href="/users">View people <span aria-hidden="true">→</span></a>
+            </div>
+        </header>
+
+        <main class="register-main">
+            <section class="register-page-heading">
+                <div>
+                    <p class="register-eyebrow">Team directory</p>
+                    <h1>Register a person</h1>
+                    <p>Add their details and capture a face profile for attendance recognition.</p>
+                </div>
+                <div class="register-secure-note">
+                    <span aria-hidden="true"></span>
+                    Secure face enrollment
+                </div>
+            </section>
+
+            <div class="register-layout">
+                <section class="register-panel" aria-labelledby="profileHeading">
+                    <div class="register-panel-heading">
+                        <span class="register-step">01</span>
+                        <div>
+                            <h2 id="profileHeading">Profile details</h2>
+                            <p>Enter the person's information</p>
+                        </div>
+                    </div>
+
+                    <form id="registerForm" class="register-form">
+                        <div class="register-form-grid">
+                            <div class="register-field">
+                                <label for="name">Full name <span>*</span></label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    placeholder="e.g. Alex Morgan"
+                                    autocomplete="name"
+                                    required
+                                >
+                            </div>
+
+                            <div class="register-field">
+                                <label for="employee_id">Employee ID <span>*</span></label>
+                                <input
+                                    type="text"
+                                    id="employee_id"
+                                    name="employee_id"
+                                    placeholder="e.g. EMP-1042"
+                                    autocomplete="off"
+                                    required
+                                >
+                            </div>
+
+                            <div class="register-field">
+                                <label for="email">Email address</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="name@company.com"
+                                    autocomplete="email"
+                                >
+                            </div>
+
+                            <div class="register-field">
+                                <label for="phone">Phone number</label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    placeholder="Enter phone number"
+                                    autocomplete="tel"
+                                >
+                            </div>
+
+                            <div class="register-field register-field-full">
+                                <label for="department">Department</label>
+                                <input
+                                    type="text"
+                                    id="department"
+                                    name="department"
+                                    placeholder="e.g. Operations"
+                                    autocomplete="organization-title"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="register-form-note">
+                            <span aria-hidden="true">*</span>
+                            Required fields
+                        </div>
+
+                        <button
+                            type="button"
+                            class="register-open-camera"
+                            onclick="startCamera()"
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            Open camera
+                        </button>
+                    </form>
+                </section>
+
+                <section class="register-panel register-camera-panel" aria-labelledby="captureHeading">
+                    <div class="register-panel-heading">
+                        <span class="register-step">02</span>
+                        <div>
+                            <h2 id="captureHeading">Face capture</h2>
+                            <p>Capture a clear, front-facing photo</p>
+                        </div>
+                        <span class="register-camera-badge"><span></span> Camera</span>
+                    </div>
+
+                    <div class="camera-box register-camera-box">
+                        <video id="video" autoplay playsinline aria-label="Live face capture camera"></video>
+                        <div class="register-face-frame" aria-hidden="true">
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                        <div id="cameraMessage" class="register-camera-message" role="status">
+                            Camera not started
+                        </div>
+                        <div class="register-camera-hint" aria-hidden="true">Center your face in the frame</div>
+                    </div>
+
+                    <div class="register-camera-actions">
+                        <button
+                            type="button"
+                            class="register-secondary-button"
+                            onclick="captureFace()"
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            Capture & check face
+                        </button>
+                        <button
+                            type="button"
+                            class="register-submit-button"
+                            onclick="registerUser()"
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="m5 12.5 4.3 4.3L19 7"/>
+                            </svg>
+                            Register person
+                        </button>
+                    </div>
+
+                    <canvas id="canvas" style="display:none;"></canvas>
+                    <div id="captureMessage" class="register-capture-message" role="status" aria-live="polite"></div>
+
+                    <div class="register-quality-note">
+                        <span aria-hidden="true">i</span>
+                        Good lighting and a clear view of the face improve recognition.
+                    </div>
+                </section>
+            </div>
+
+            <footer class="register-footer">
+                <span>Attendance OS <span aria-hidden="true">·</span> Secure face enrollment</span>
+                <a href="/users">Return to people <span aria-hidden="true">→</span></a>
+            </footer>
+        </main>
+    </div>
 </div>
 
-
 <script src="{{ url_for('static', filename='js/camera.js') }}"></script>
-
 </body>
 
 </html>
