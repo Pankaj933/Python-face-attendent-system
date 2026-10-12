@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Mark Attendance - Automated Attendance</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <h1>Mark Attendance</h1>
+
+        <p>
+            Look at the camera to mark your attendance.
+        </p>
+
+    </header>
+
+
+    <div class="attendance-grid">
+
+
+        <!-- CAMERA -->
+
+        <section class="card attendance-camera-card">
+
+            <h2>Attendance Camera</h2>
+
+            <div class="camera-box attendance-camera-box">
+
+                <video
+                    id="video"
+                    autoplay
+                    playsinline
+                ></video>
+
+                <div id="cameraMessage">
+                    Camera starting...
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="btn"
+                onclick="startAttendanceCamera()"
+            >
+                📷 Retry Camera
+            </button>
+
+
+            <canvas
+                id="canvas"
+                style="display:none;"
+            ></canvas>
+
+
+            <div
+                id="attendanceMessage"
+                class="attendance-message"
+            ></div>
+
+        </section>
+
+
+        <!-- RESULT -->
+
+        <section class="card attendance-result-card">
+
+            <h2>Attendance Result</h2>
+
+
+            <div
+                id="resultBox"
+                class="result-box"
+            >
+
+                <div class="result-icon">
+                    👤
+                </div>
+
+                <h3 id="resultName">
+                    Waiting for face...
+                </h3>
+
+                <p id="resultDetails">
+                    Camera khulte hi face automatically scan hoga.
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <div class="back-area">
+
+        <a href="/" class="back-btn">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+<div
+    id="attendanceSuccessModal"
+    class="attendance-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="attendanceSuccessTitle"
+    aria-describedby="attendanceSuccessDetails"
+    hidden
+>
+    <div class="attendance-modal-card">
+        <div class="attendance-modal-icon" aria-hidden="true">✓</div>
+        <h2 id="attendanceSuccessTitle">Attendance Successfully Marked</h2>
+        <p id="attendanceSuccessDetails"></p>
+        <button
+            type="button"
+            class="btn attendance-modal-ok"
+            onclick="goToDashboard()"
+        >
+            OK
+        </button>
+    </div>
+</div>
+
+
+<script
+    src="{{ url_for('static', filename='js/attendance.js') }}"
+></script>
+
+</body>
+
+</html>

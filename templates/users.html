@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Users - Automated Attendance</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <header class="header users-header">
+
+        <div>
+
+            <h1>Registered Users</h1>
+
+            <p>
+                Manage all registered employees.
+            </p>
+
+        </div>
+
+        <a href="/register" class="top-btn">
+            + Register User
+        </a>
+
+    </header>
+
+
+    <!-- USER TABLE -->
+
+    <section class="card users-card">
+
+        <div class="table-wrapper">
+
+            <table class="users-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Name</th>
+
+                        <th>Employee ID</th>
+
+                        <th>Email</th>
+
+                        <th>Phone</th>
+
+                        <th>Department</th>
+
+                        <th>Registered On</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% if users %}
+
+                        {% for user in users %}
+
+                        <tr>
+
+                            <td>
+                                {{ loop.index }}
+                            </td>
+
+                            <td>
+                                <strong>
+                                    {{ user["name"] }}
+                                </strong>
+                            </td>
+
+                            <td>
+                                {{ user["employee_id"] }}
+                            </td>
+
+                            <td>
+                                {{ user["email"] or "-" }}
+                            </td>
+
+                            <td>
+                                {{ user["phone"] or "-" }}
+                            </td>
+
+                            <td>
+                                {{ user["department"] or "-" }}
+                            </td>
+
+                            <td>
+                                {{ user["created_at"] }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="empty-users"
+                            >
+                                No users registered yet.
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- BACK -->
+
+    <div class="back-area">
+
+        <a href="/" class="back-btn">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
